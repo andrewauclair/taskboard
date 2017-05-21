@@ -2,6 +2,6 @@
 .metadata
 .recommenders
 build
-test
+/test
 report.xml
 taskboard/.settings/
