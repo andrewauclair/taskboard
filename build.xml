@@ -1,0 +1,116 @@
+<project xmlns:jacoco="antlib:org.jacoco.ant">
+	<property name="lib.dir" location="taskboard/lib" />
+	<property name="src.dir" location="taskboard/src"/>
+	<property name="result.dir" location="build"/>
+	<property name="result.classes.dir" location="${result.dir}/classes/"/>
+	<property name="test.classes.dir" location="test/classes/" />
+	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
+	
+	<path id="test.path.id">
+		<path location="${resuilt.classes.dir}" />
+		<path refid="lib.path.id" />
+	</path>
+	
+	<path id="lib.path.id">
+		<fileset dir="${lib.dir}" />
+	</path>
+	
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="taskboard/lib/jacocoant.jar"/>
+    </taskdef>
+	
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+	
+	<target name="clean-test">
+		<delete dir="test"/>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="build/classes/"/>
+		<javac srcdir="taskboard/src" destdir="build/classes">
+			<classpath refid="lib.path.id" />
+		</javac>
+	</target>
+	
+	<target name="compile-test" depends="clean-test">
+		<mkdir dir="test/classes/"/>
+		<javac srcdir="taskboard/src" destdir="test/classes" debug="on">
+			<classpath refid="lib.path.id" />
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="build/jar"/>
+		<jar destfile="build/jar/taskboard.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="stats.ui.view.MainView"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="report" depends="compile-test">
+		<mkdir dir="${result.report.dir}" />
+
+		<!-- Run all tests -->
+		<jacoco:coverage destfile="${result.exec.file}">
+			<junit fork="yes" haltonfailure="false" dir="${result.dir}" forkmode="once" failureproperty="test.failed">
+				
+				<!-- <jvmarg value="${log4j.config}" /> -->
+				<classpath><!-- refid="test.path.id"> -->
+					<pathelement location="${test.classes.dir}" />
+					<pathelement path="taskboard/lib/junit-4.12.jar;taskboard/lib/gson-2.8.0.jar;taskboard/lib/hamcrest-core-1.3.jar;taskboard/lib/mockito-all-1.9.5.jar"/>
+				</classpath>
+				<formatter type="xml" />
+				<batchtest todir="${result.report.dir}">
+					<fileset dir="${test.classes.dir}">
+						<include name="**/*Test.class" />
+					</fileset>
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+		
+		<fail message="Test(s) failed." if="test.failed" />
+		
+		<!-- Generate HTML report
+			- junit-noframes.html -> Single page HTML-report 
+			- index.html -> HTML-report using frames (several files, but more comfortable to read)-->
+		<junitreport todir="${result.report.dir}">
+			<fileset dir="${result.report.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="build/junit" />
+			<report format="frames" todir="build/junit" />
+		</junitreport>
+		
+		<!-- Generate Code Coverage report
+			See: http://www.eclemma.org/jacoco/trunk/doc/ant.html -->
+		<jacoco:report>
+			<executiondata>
+				<file file="${result.exec.file}" />
+			</executiondata>
+
+			<structure name="AntTestReporting">
+				<classfiles>
+					<fileset dir="${test.classes.dir}">
+						<include name="**/*.class" />
+						<!-- Exclude classes necessary for testing only from the code coverage report-->
+						<exclude name="**/*Test.class" />
+						<!-- Exclude inner classes -->
+						<!-- <exclude name="**/*$*.class" /> -->
+					</fileset>
+				</classfiles>
+			</structure>
+
+			<html destdir="build/jacoco" />
+			<xml destfile="report.xml" />
+		</jacoco:report>
+	</target>
+	
+	<target name="test" depends="jar,report">
+	</target>
+	
+	
+</project>
