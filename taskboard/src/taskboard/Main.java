@@ -8,6 +8,8 @@ public final class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		
+		System.out.println("Task Board Alpha 0.1");
+		
 		while (true) {
 			String line = scanner.nextLine();
 			

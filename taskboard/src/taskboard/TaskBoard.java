@@ -2,7 +2,7 @@ package taskboard;
 
 public class TaskBoard {
 	TaskBin backlog = new TaskBin();
-	TaskBin icebox = new TaskBin();
+	private TaskBin icebox = new TaskBin();
 	int uniqueID = 1;
 	
 	public Task createTask(String name, int hours) {
@@ -67,5 +67,13 @@ public class TaskBoard {
 
 	public int finishedTasks() {
 		return backlog.tasksFinished() + icebox.tasksFinished();
+	}
+
+	public TaskBin getIcebox() {
+		return icebox;
+	}
+
+	public TaskBin getBacklog() {
+		return backlog;
 	}
 }

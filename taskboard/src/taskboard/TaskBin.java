@@ -1,5 +1,6 @@
 package taskboard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,5 +66,23 @@ public class TaskBin {
 			}
 		}
 		return count;
+	}
+	
+	public ArrayList<Task> getTasks() {
+		ArrayList<Task> taskList = new ArrayList<>();
+		for (Task task : tasks.values()) {
+			taskList.add(task);
+		}
+		return taskList;
+	}
+
+	public int highestID() {
+		int highest = 0;
+		for (Integer id : tasks.keySet()) {
+			if (id > highest) {
+				highest = id;
+			}
+		}
+		return highest;
 	}
 }

@@ -87,4 +87,14 @@ public class TaskBinTest {
 		
 		assertEquals(2, bin.tasksFinished());
 	}
+	
+	@Test
+	public void shouldReturnHighestIDInBin() {
+		bin.addTask(new Task("", 8, 5));
+		bin.addTask(new Task("", 8, 10));
+		bin.addTask(new Task("", 8, 15));
+		bin.addTask(new Task("", 8, 60));
+		
+		assertEquals(60, bin.highestID());
+	}
 }
