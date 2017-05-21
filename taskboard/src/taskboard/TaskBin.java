@@ -32,4 +32,38 @@ public class TaskBin {
 		}
 		return hours;
 	}
+
+	public Task getTask(int id) {
+		return tasks.get(id);
+	}
+
+	public int tasksUnstarted() {
+		int count = 0;
+		for (Task task : tasks.values()) {
+			if (!task.started() && !task.finished()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public int tasksStarted() {
+		int count = 0;
+		for (Task task : tasks.values()) {
+			if (task.started()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public int tasksFinished() {
+		int count = 0;
+		for (Task task : tasks.values()) {
+			if (task.finished()) {
+				count++;
+			}
+		}
+		return count;
+	}
 }

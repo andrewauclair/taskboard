@@ -8,6 +8,7 @@ public class Task {
 	private boolean started;
 	private boolean finished;
 
+	// TODO Possible value object for hours because I want it to be .25, .5, 1, 2, 4, 8, not any random value
 	public Task(String name, int hours, int id) {
 		this.name = name;
 		this.hours = hours;
@@ -27,7 +28,9 @@ public class Task {
 	}
 
 	public void start() {
-		started = true;
+		if (!finished()) {
+			started = true;
+		}
 	}
 
 	public boolean started() {
@@ -37,6 +40,7 @@ public class Task {
 	public void finish() {
 		if (started()) {
 			finished = true;
+			started = false;
 		}
 	}
 

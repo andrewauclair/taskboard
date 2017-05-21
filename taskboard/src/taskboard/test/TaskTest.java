@@ -29,15 +29,24 @@ public class TaskTest {
 	}
 	
 	@Test
-	public void shouldFinishedStartedTask() {
+	public void shouldFinishStartedTask() {
 		task.start();
 		task.finish();
 		assertTrue(task.finished());
+		assertFalse(task.started());
 	}
 	
 	@Test
 	public void shouldNotFinishUnstartedTask() {
 		task.finish();
 		assertFalse(task.finished());
+	}
+	
+	@Test
+	public void shouldNotStartFinishedTask() {
+		task.start();
+		task.finish();
+		task.start();
+		assertFalse(task.started());
 	}
 }
